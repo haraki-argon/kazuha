@@ -446,6 +446,26 @@
   };
   $("close-panel").onclick = () => $("controls").classList.remove("open", "mobile-collection", "mobile-layers");
   $("close-layers").onclick = () => $("controls").classList.remove("open", "mobile-collection", "mobile-layers");
+  function showBrowserNotice() {
+    const notice = $("browser-notice");
+    const warning = $("browser-warning");
+    const userAgent = navigator.userAgent || "";
+    const embeddedBrowsers = [
+      { pattern: /MicroMessenger/i, name: "微信" },
+      { pattern: /(?:\bQQ\/|QQBrowser)/i, name: "QQ" },
+      { pattern: /Weibo/i, name: "微博" },
+      { pattern: /(?:XiaoHongShu|XHS|RedNote)/i, name: "小红书" }
+    ];
+    const browser = embeddedBrowsers.find(({ pattern }) => pattern.test(userAgent));
+    if (browser) {
+      warning.textContent = `检测到您正在使用${browser.name}内置浏览器，请注意：可能无法导出图片，建议复制链接后使用系统浏览器打开。`;
+      warning.hidden = false;
+    }
+    notice.hidden = false;
+    $("browser-notice-close").focus();
+  }
+  $("browser-notice-close").onclick = () => { $("browser-notice").hidden = true; };
+  showBrowserNotice();
   $("export-button").onclick = () => {
     if (!canvas.width) return;
     const link = document.createElement("a");
